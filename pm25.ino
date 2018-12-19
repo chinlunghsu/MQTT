@@ -35,9 +35,7 @@ void loop() {
     int pm25 = Serial1.read();
     Serial.write(pm25);
   
-  display.println("Hsu_001");   //输出字符并换行
   display.setTextSize(2);             //设置字体大小
-  pm25 = pm25-28;
   display.setCursor(60,13);
   display.print(pm25);          //输出文字
   display.display(); 
