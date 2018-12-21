@@ -3,6 +3,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
+
 //OLED設定
 #define OLED_RESET 4
 Adafruit_SSD1306 display(OLED_RESET);
@@ -14,6 +15,7 @@ Adafruit_SSD1306 display(OLED_RESET);
 #if (SSD1306_LCDHEIGHT != 32)
 #error("Height incorrect, please fix Adafruit_SSD1306.h!");
 #endif
+String readString;
 
 void setup() {
   Serial.begin(115200);
@@ -21,8 +23,8 @@ void setup() {
   // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3D (for the 128x64)
   // init done
-
   display.clearDisplay();
+
 }
 
 void loop() {
@@ -30,15 +32,21 @@ void loop() {
   display.setTextSize(1);             //设置字体大小
   display.setTextColor(WHITE);        //设置字体颜色白色
   display.setCursor(0,0);             //设置字体的起始位置
-  
-   if (Serial1.available()) {
-    int pm25 = Serial1.read();
-    Serial.write(pm25);
-  
-  display.setTextSize(2);             //设置字体大小
-  display.setCursor(60,13);
-  display.print(pm25);          //输出文字
+  while (Serial1.available())  
+  {
+    delay(30);  
+    if (Serial1.available() >0)
+    {
+      char c = Serial1.read();  
+      readString += c; 
+      display.clearDisplay();
+    }
+  }
+  display.setTextSize(4);             //设置字体大小
+  display.setCursor(47,4);
+  display.print(readString);          //输出文字
   display.display(); 
-  display.clearDisplay();
-   }
+  delay(3000); 
+  readString="";
 }
+
